@@ -11,6 +11,7 @@ type Question = {
   promptJa: string; // 日本語の問題文/意味
   displayEnglish: string; // 表示する英文(空欄あり、または例文)
   speakEnglish: string; // 読み上げる正解の英文
+  translationJa: string; // 英文の日本語訳
   answer: string;
   hint: string;
   choices: string[]; // 4つの候補(正解1つ+まちがい3つ、シャッフル済み)
@@ -56,6 +57,7 @@ function buildVocabQuestions(words: VocabWord[], pool: VocabWord[]): Question[] 
     promptJa: `つぎの意味の英単語を入力しよう：「${w.meaning}」`,
     displayEnglish: w.example.replace(new RegExp(w.word, "i"), "＿＿＿＿"),
     speakEnglish: w.word,
+    translationJa: w.exampleJa,
     answer: w.word,
     hint: `読み方のヒント：${w.reading}`,
     choices: buildChoices(w.word, wordPool),
@@ -73,6 +75,7 @@ function buildGrammarQuestions(items: GrammarQuestion[], pool: GrammarQuestion[]
       promptJa: g.prompt,
       displayEnglish: g.sentence,
       speakEnglish: filled,
+      translationJa: g.sentenceJa,
       answer: g.answer,
       hint: g.hint,
       choices: buildChoices(g.answer, answerPool),
@@ -317,6 +320,10 @@ export default function QuizApp() {
           </button>
           <p style={{ fontSize: 22, fontWeight: 700, margin: 0 }}>{current.displayEnglish}</p>
         </div>
+
+        <p style={{ fontSize: 17, color: "var(--text-soft)", margin: "0 0 12px" }}>
+          訳：{current.translationJa}
+        </p>
 
         <p style={{ fontSize: 16, color: "var(--text-soft)" }}>💡 {current.hint}</p>
 
