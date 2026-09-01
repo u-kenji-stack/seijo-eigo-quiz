@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { vocabList, grammarList, VocabWord, GrammarQuestion } from "@/lib/data";
-import { speak, isSpeechSupported } from "@/lib/speech";
+import { speak, speakList, isSpeechSupported } from "@/lib/speech";
 
 type Mode = "vocab" | "grammar";
 
@@ -13,6 +13,7 @@ type Question = {
   speakEnglish: string; // 読み上げる正解の英文
   answer: string;
   hint: string;
+  choices: string[]; // 4つの候補(正解1つ+まちがい3つ、シャッフル済み)
 };
 
 function shuffle<T>(arr: T[]): T[] {
@@ -24,7 +25,26 @@ function shuffle<T>(arr: T[]): T[] {
   return copy;
 }
 
-function buildVocabQuestions(words: VocabWord[]): Question[] {
+function normalize(s: string): string {
+  return s.trim().toLowerCase().replace(/\s+/g, " ");
+}
+
+// 正解1つに対して、同じ候補プールからまちがいを3つ選び、正解と合わせてシャッフルする
+function buildChoices(answer: string, pool: string[], count = 3): string[] {
+  const seen = new Set([normalize(answer)]);
+  const distractors: string[] = [];
+  for (const candidate of shuffle(pool)) {
+    const key = normalize(candidate);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    distractors.push(candidate);
+    if (distractors.length >= count) break;
+  }
+  return shuffle([answer, ...distractors]);
+}
+
+function buildVocabQuestions(words: VocabWord[], pool: VocabWord[]): Question[] {
+  const wordPool = pool.map((w) => w.word);
   return words.map((w) => ({
     id: w.id,
     promptJa: `つぎの意味の英単語を入力しよう：「${w.meaning}」`,
@@ -32,10 +52,12 @@ function buildVocabQuestions(words: VocabWord[]): Question[] {
     speakEnglish: w.word,
     answer: w.word,
     hint: `読み方のヒント：${w.reading}`,
+    choices: buildChoices(w.word, wordPool),
   }));
 }
 
-function buildGrammarQuestions(items: GrammarQuestion[]): Question[] {
+function buildGrammarQuestions(items: GrammarQuestion[], pool: GrammarQuestion[]): Question[] {
+  const answerPool = pool.map((g) => g.answer);
   return items.map((g) => {
     // 「(play)」のようなヒント表記を取り除いてから空らんに正解を入れる
     const withoutHint = g.sentence.replace(/\s*\([^)]*\)/g, "");
@@ -47,12 +69,9 @@ function buildGrammarQuestions(items: GrammarQuestion[]): Question[] {
       speakEnglish: filled,
       answer: g.answer,
       hint: g.hint,
+      choices: buildChoices(g.answer, answerPool),
     };
   });
-}
-
-function normalize(s: string): string {
-  return s.trim().toLowerCase().replace(/\s+/g, " ");
 }
 
 const QUIZ_LENGTH = 10;
@@ -79,7 +98,9 @@ export default function QuizApp() {
 
   function startMode(m: Mode) {
     const source =
-      m === "vocab" ? buildVocabQuestions(shuffle(vocabList)) : buildGrammarQuestions(shuffle(grammarList));
+      m === "vocab"
+        ? buildVocabQuestions(shuffle(vocabList), vocabList)
+        : buildGrammarQuestions(shuffle(grammarList), grammarList);
     const picked = source.slice(0, Math.min(QUIZ_LENGTH, source.length));
     setMode(m);
     setQuestions(picked);
@@ -115,6 +136,11 @@ export default function QuizApp() {
   function speakTargetWord() {
     if (!current) return;
     speak(current.speakEnglish.replace(/＿＿＿＿/g, ""), "en-US");
+  }
+
+  function speakChoices() {
+    if (!current) return;
+    speakList(current.choices, "en-US");
   }
 
   function submitAnswer() {
@@ -176,7 +202,7 @@ export default function QuizApp() {
           <div className="pill">成城学園 中2 英語</div>
           <h1 style={{ fontSize: 30, margin: "12px 0 4px" }}>2学期 中間テスト クイズ 🎧✏️</h1>
           <p style={{ color: "var(--text-soft)", fontSize: 18 }}>
-            タイプして答えよう。答えは声でも読み上げるよ！
+            4つの候補から答えをえらんで、その言葉をタイプしよう。答えは声でも読み上げるよ！
           </p>
         </header>
 
@@ -287,6 +313,47 @@ export default function QuizApp() {
         </div>
 
         <p style={{ fontSize: 16, color: "var(--text-soft)" }}>💡 {current.hint}</p>
+
+        <div style={{ margin: "16px 0" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+            <p style={{ fontSize: 16, fontWeight: 700, color: "var(--text-soft)", margin: 0 }}>
+              この4つの中から選んでタイプしよう
+            </p>
+            <button
+              className="speaker-btn"
+              style={{ width: 40, height: 40, fontSize: 18 }}
+              onClick={speakChoices}
+              aria-label="候補を聞く"
+              title="候補を聞く"
+            >
+              🔊
+            </button>
+          </div>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
+              gap: 10,
+            }}
+          >
+            {current.choices.map((choice, i) => (
+              <div
+                key={choice + i}
+                style={{
+                  border: "3px solid #c9c2ad",
+                  borderRadius: 12,
+                  padding: "10px 14px",
+                  fontSize: 20,
+                  fontWeight: 700,
+                  textAlign: "center",
+                  background: "#fffdf7",
+                }}
+              >
+                {choice}
+              </div>
+            ))}
+          </div>
+        </div>
 
         <input
           ref={inputRef}

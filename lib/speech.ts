@@ -16,6 +16,22 @@ export function speak(text: string, lang: string = "en-US", rate: number = 0.9) 
   synth.speak(utterance);
 }
 
+// 複数のテキストを順番に読み上げる(選択肢を1つずつ聞かせるときなどに使用)。
+export function speakList(texts: string[], lang: string = "en-US", rate: number = 0.9) {
+  if (typeof window === "undefined") return;
+  const synth = window.speechSynthesis;
+  if (!synth) return;
+
+  synth.cancel();
+  texts.forEach((text) => {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = lang;
+    utterance.rate = rate;
+    utterance.pitch = 1;
+    synth.speak(utterance);
+  });
+}
+
 export function isSpeechSupported(): boolean {
   if (typeof window === "undefined") return false;
   return "speechSynthesis" in window;
