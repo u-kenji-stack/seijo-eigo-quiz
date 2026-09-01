@@ -29,14 +29,20 @@ function normalize(s: string): string {
   return s.trim().toLowerCase().replace(/\s+/g, " ");
 }
 
+// candidateがanswerと同じ、または一方がもう一方を含む(似すぎていて紛らわしい)場合はtrue
+// 例:「several」と「several times」のような紛らわしいペアを同時に選択肢として出さないようにする
+function isTooSimilar(a: string, b: string): boolean {
+  const na = normalize(a);
+  const nb = normalize(b);
+  return na === nb || na.includes(nb) || nb.includes(na);
+}
+
 // 正解1つに対して、同じ候補プールからまちがいを3つ選び、正解と合わせてシャッフルする
 function buildChoices(answer: string, pool: string[], count = 3): string[] {
-  const seen = new Set([normalize(answer)]);
   const distractors: string[] = [];
   for (const candidate of shuffle(pool)) {
-    const key = normalize(candidate);
-    if (seen.has(key)) continue;
-    seen.add(key);
+    if (isTooSimilar(candidate, answer)) continue;
+    if (distractors.some((d) => isTooSimilar(candidate, d))) continue;
     distractors.push(candidate);
     if (distractors.length >= count) break;
   }
@@ -74,7 +80,7 @@ function buildGrammarQuestions(items: GrammarQuestion[], pool: GrammarQuestion[]
   });
 }
 
-const QUIZ_LENGTH = 10;
+const QUIZ_LENGTH = 20;
 
 export default function QuizApp() {
   const [mode, setMode] = useState<Mode | null>(null);
