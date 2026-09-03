@@ -4,6 +4,16 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "せいじょう英語クイズ",
   description: "中2 2学期 中間試験対策の英語クイズアプリ",
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+    googleBot: {
+      index: false,
+      follow: false,
+      noimageindex: true,
+    },
+  },
 };
 
 export default function RootLayout({
