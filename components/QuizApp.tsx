@@ -214,7 +214,7 @@ export default function QuizApp() {
             alt="ROKKEN inc"
             style={{ height: 40, width: "auto", marginBottom: 12 }}
           />
-          <h1 style={{ fontSize: 30, margin: "12px 0 4px" }}>2学期 中間テスト クイズ 🎧✏️</h1>
+          <h1 style={{ fontSize: 30, margin: "12px 0 4px" }}>中3 英語 総まとめクイズ 🎧✏️</h1>
           <p style={{ color: "var(--text-soft)", fontSize: 18 }}>
             4つの候補から答えをえらんで、その言葉をタイプしよう。答えは声でも読み上げるよ！
           </p>
@@ -238,13 +238,13 @@ export default function QuizApp() {
             <div style={{ fontSize: 40 }}>📝</div>
             <h2 style={{ fontSize: 24, margin: "8px 0" }}>ぶんぽうモード</h2>
             <p style={{ color: "var(--text-soft)", fontSize: 17 }}>
-              空らんに入る正しい形をタイプしよう。過去形・比較級・不定詞など。
+              空らんに入る正しい形をタイプしよう。受け身・現在完了・関係代名詞など。
             </p>
           </button>
         </div>
 
         <p style={{ marginTop: 24, fontSize: 15, color: "var(--text-soft)", textAlign: "center" }}>
-          ※ 出題内容は中間試験範囲の練習用サンプルです。実際の試験範囲に合わせて先生や保護者の方が内容を編集できます。
+          ※ 出題内容は中学3年生レベルの練習用サンプルです。実際の学習範囲に合わせて先生や保護者の方が内容を編集できます。
         </p>
       </div>
     );
