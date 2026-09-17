@@ -208,7 +208,12 @@ export default function QuizApp() {
     return (
       <div>
         <header style={{ textAlign: "center", marginBottom: 8 }}>
-          <div className="pill">成城学園 中2 英語</div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/rokken-logo.png"
+            alt="ROKKEN inc"
+            style={{ height: 40, width: "auto", marginBottom: 12 }}
+          />
           <h1 style={{ fontSize: 30, margin: "12px 0 4px" }}>2学期 中間テスト クイズ 🎧✏️</h1>
           <p style={{ color: "var(--text-soft)", fontSize: 18 }}>
             4つの候補から答えをえらんで、その言葉をタイプしよう。答えは声でも読み上げるよ！
