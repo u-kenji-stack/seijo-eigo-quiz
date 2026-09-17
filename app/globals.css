@@ -1,18 +1,18 @@
 :root {
-  --bg: #f2f2f2;
+  --bg: #fdf6e9;
   --card-bg: #ffffff;
-  --text: #231815;
+  --text: #2b2b2b;
   --text-soft: #4a4a4a;
-  --accent: #231815;
-  --accent-dark: #000000;
-  --accent-soft: #e9e9e9;
+  --accent: #2f6f5e;
+  --accent-dark: #1f4c40;
+  --accent-soft: #dff2ec;
   --wrong: #b3403a;
   --wrong-soft: #fbe4e2;
   --correct: #2f8f4e;
   --correct-soft: #e4f6e8;
-  --gold: #231815;
+  --gold: #d8972a;
   --focus-ring: #1f6fd6;
-  --radius: 10px;
+  --radius: 20px;
 }
 
 * {
@@ -41,7 +41,6 @@ h2,
 h3 {
   font-family: "Atkinson Hyperlegible", "Noto Sans JP", sans-serif;
   line-height: 1.4;
-  letter-spacing: 0.02em;
 }
 
 button {
@@ -70,36 +69,39 @@ input {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  border: 3px solid var(--accent);
-  border-radius: 8px;
+  border: none;
+  border-radius: 16px;
   padding: 18px 28px;
   font-size: 22px;
   font-weight: 700;
   color: #fff;
   background: var(--accent);
-  transition: transform 0.05s ease, opacity 0.1s ease;
+  box-shadow: 0 4px 0 var(--accent-dark);
+  transition: transform 0.05s ease;
 }
 
 .big-btn:active {
-  transform: translateY(2px);
-  opacity: 0.85;
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--accent-dark);
 }
 
 .big-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  box-shadow: none;
 }
 
 .big-btn.secondary {
   background: #ffffff;
-  color: var(--accent);
+  color: var(--accent-dark);
   border: 3px solid var(--accent);
+  box-shadow: 0 4px 0 var(--accent-soft);
 }
 
 .speaker-btn {
   border: 3px solid var(--accent);
   background: var(--accent-soft);
-  color: var(--accent);
+  color: var(--accent-dark);
   border-radius: 50%;
   width: 56px;
   height: 56px;
@@ -113,29 +115,27 @@ input {
 .card {
   background: var(--card-bg);
   border-radius: var(--radius);
-  border: 1px solid #ddd;
   padding: 28px 24px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
 }
 
 .pill {
   display: inline-block;
   padding: 6px 16px;
-  border-radius: 4px;
-  background: var(--accent);
-  color: #fff;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-dark);
   font-weight: 700;
   font-size: 16px;
-  letter-spacing: 0.05em;
 }
 
 .answer-input {
   width: 100%;
   font-size: 26px;
   padding: 16px 18px;
-  border-radius: 8px;
-  border: 3px solid #bbbbbb;
-  background: #ffffff;
+  border-radius: 14px;
+  border: 3px solid #c9c2ad;
+  background: #fffdf7;
   color: var(--text);
 }
 
@@ -169,7 +169,7 @@ input {
 .progress-bar-track {
   width: 100%;
   height: 14px;
-  background: #dcdcdc;
+  background: #ece4d2;
   border-radius: 999px;
   overflow: hidden;
 }
@@ -215,9 +215,9 @@ input {
   border-radius: var(--radius);
   padding: 24px;
   text-align: left;
-  border: 3px solid #ddd;
+  border: 3px solid transparent;
   background: var(--card-bg);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
 }
 
 .mode-card:hover,

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "中3 英語 総まとめクイズ",
-  description: "中学3年生レベルの英語学習クイズアプリ",
+  title: "せいじょう英語クイズ",
+  description: "中2 2学期 中間試験対策の英語クイズアプリ",
   robots: {
     index: false,
     follow: false,
